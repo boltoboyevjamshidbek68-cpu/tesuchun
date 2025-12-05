@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository, FindOptionsWhere, In } from 'typeorm';
+import { Repository } from 'typeorm';
 import { Product } from './product.entity';
 import { Brand } from 'src/brand/brand.entity';
 import { Category } from 'src/category/category.entity';
@@ -14,7 +14,7 @@ export class ProductsService {
     private brandRepo: Repository<Brand>,
     @InjectRepository(Category)
     private categoryRepo: Repository<Category>,
-  ) {}
+  ) { }
 
   async findAll(query: any): Promise<{ data: Product[]; total: number }> {
     const {
@@ -28,16 +28,16 @@ export class ProductsService {
       limit = 10,
     } = query;
 
-    const where: FindOptionsWhere<Product> = {};
+    const where: any = {};
 
     if (brand) {
       const b = await this.brandRepo.findOne({ where: { name: brand } });
-      if (b) where.brand = { id: b.id };
+      if (b) where.brandId = { id: b.id };
     }
 
     if (category) {
       const c = await this.categoryRepo.findOne({ where: { name: category } });
-      if (c) where.category = { id: c.id };
+      if (c) where.categoryId = { id: c.id };
     }
 
     if (memory) {
@@ -45,8 +45,9 @@ export class ProductsService {
     }
 
     if (minPrice !== undefined || maxPrice !== undefined) {
-      if (minPrice !== undefined) (where.price as any).gte = minPrice;
-      if (maxPrice !== undefined) (where.price as any).lte = maxPrice;
+      where.price = {};
+      if (minPrice !== undefined) where.price.gte = minPrice;
+      if (maxPrice !== undefined) where.price.lte = maxPrice;
     }
 
     const order: any = {};

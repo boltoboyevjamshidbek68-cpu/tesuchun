@@ -1,14 +1,4 @@
-import { Brand } from 'src/brand/brand.entity';
-import { Category } from 'src/category/category.entity';
-import {
-  Entity,
-  PrimaryGeneratedColumn,
-  Column,
-  ManyToOne,
-  CreateDateColumn,
-  UpdateDateColumn,
-} from 'typeorm';
-
+import { Column, Entity, PrimaryGeneratedColumn, ManyToOne } from 'typeorm';
 
 @Entity()
 export class Product {
@@ -18,42 +8,21 @@ export class Product {
   @Column()
   name: string;
 
-  @Column('decimal', { precision: 10, scale: 2 })
+  @Column()
   price: number;
+
+  @Column("text", { array: true, nullable: true })
+  images: string[]; 
 
   @Column({ nullable: true })
   description: string;
 
-  @Column()
-  imageUrl: string;
-
-  @Column({ type: 'float', default: 0 })
-  rating: number;
+  @Column({ default: 0 })
+  stock: number;
 
   @Column({ nullable: true })
-  memory: string;
+  categoryId: number;
 
   @Column({ nullable: true })
-  batteryCapacity: string;
-
-  @Column({ nullable: true })
-  screenType: string;
-
-  @Column({ nullable: true })
-  screenDiagonal: string;
-
-  @Column({ nullable: true })
-  protectionClass: string;
-
-  @ManyToOne(() => Brand, (brand) => brand.products, { eager: true })
-  brand: Brand;
-
-  @ManyToOne(() => Category, (category) => category.products, { eager: true })
-  category: Category;
-
-  @CreateDateColumn()
-  createdAt: Date;
-
-  @UpdateDateColumn()
-  updatedAt: Date;
+  brandId: number;
 }
